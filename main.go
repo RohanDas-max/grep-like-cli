@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 	"time"
@@ -34,81 +33,40 @@ func main() {
 		args := os.Args[1]
 		filename := os.Args[2]
 
-		searched, fn := search(filename, args)
-		if searched != "" {
-			fmt.Printf("%s found in %s \n ", searched, fn)
+		found := search(filename, args)
+		if found {
+			fmt.Printf("%s found in %s \n ", args, filename)
 		}
 	} else if len(os.Args) >= 4 {
 		args := os.Args[1]
 		filename := os.Args[2]
-		var data string
+		found := search(filename, args)
+		if found {
+			output := fmt.Sprintf("%s found in %s \n ", args, filename)
+			OutputFilename := os.Args[4]
+			if OutputFilename != "" {
+				go oflag(OutputFilename, output)
+				time.Sleep(10 * time.Millisecond)
 
-		searched, fn := search(filename, args)
-		if searched != "" {
-			fmt.Printf("%s found in %s \n ", searched, fn)
-		}
-
-		OutputFilename := os.Args[4]
-		if OutputFilename != "" && data != "" {
-			go oflag(OutputFilename, data)
-			time.Sleep(time.Millisecond)
+			}
 		}
 	}
 }
 
-func search(filename, args string) (string, string) {
-	var searched string
-	arg := strings.Split(args, " ")
+func search(filename, args string) bool {
 	data, err := os.ReadFile(filename)
 
 	if err != nil {
-		fs, err := os.ReadDir(filename)
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			var data []byte
-			var err error
-			for _, fn := range fs {
-				ds := fn.Name()
-				fmt.Println(data)
-				data, err = os.ReadFile(ds)
-				if err != nil {
-					log.Fatal(err)
-				}
-			}
-			fmt.Println(string(data))
-			d := strings.Split(string(data), " ")
-			fmt.Println(d)
-			fmt.Println(err)
-			// 	for i := range d {
-			// 		for j := range arg {
-			// 			if arg[j] == d[i] {
-			// 				// fmt.Println(arg[j], d[i])
-			// 			}
-			// 		}
-			// 	}
-
-		}
-	}
-
-	d := strings.Split(string(data), " ")
-	for i := range d {
-		for j := range arg {
-			if arg[j] == d[i] {
-				searched = arg[j]
-			}
-		}
-	}
-
-	return searched, filename
-}
-
-func oflag(args string, data string) string {
-	s := flag.String("o", args, "asdadas")
-	flag.Parse()
-
-	if err := os.WriteFile(*s, []byte(data), 0400); err != nil {
 		fmt.Println(err)
 	}
-	return *s
+	return strings.Contains(string(data), args)
+}
+
+func oflag(filename string, data string) error {
+	s := flag.String("o", filename, "asdadas")
+	flag.Parse()
+	if err := os.WriteFile(*s, []byte(data), 0400); err != nil {
+		return err
+	}
+	return nil
 }
