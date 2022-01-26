@@ -5,6 +5,19 @@ import (
 	"testing"
 )
 
+func TestSearchstdin(t *testing.T) {
+	arg := "foo"
+	input := []string{
+		"foo", "bar", "foobaz", "barbazfoo", "food",
+	}
+	got := Searchstdin(input, arg)
+	var want error = nil
+
+	if got != want {
+		t.Errorf("got %v instead of %v", got, want)
+	}
+}
+
 func TestSearch(t *testing.T) {
 	filename := "test.txt"
 	args := "kya"

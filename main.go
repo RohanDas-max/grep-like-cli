@@ -12,22 +12,8 @@ import (
 func main() {
 	if len(os.Args) <= 2 {
 		var input []string
-		scanner := bufio.NewScanner(os.Stdin)
-		for {
-			scanner.Scan()
-			text := scanner.Text()
-			if len(text) != 0 {
-				input = append(input, text)
-			} else {
-				break
-			}
-		}
-		for i := range input {
-			present := strings.Contains(input[i], os.Args[1])
-			if present {
-				fmt.Println(input[i])
-			}
-		}
+		arg := os.Args[1]
+		Searchstdin(input, arg)
 
 	} else if len(os.Args) <= 3 {
 		args := os.Args[1]
@@ -53,15 +39,37 @@ func main() {
 	}
 }
 
+//function to search string from standard input
+func Searchstdin(input []string, arg string) error {
+	scanner := bufio.NewScanner(os.Stdin)
+	for {
+		scanner.Scan()
+		text := scanner.Text()
+		if len(text) != 0 {
+			input = append(input, text)
+		} else {
+			break
+		}
+	}
+	for i := range input {
+		present := strings.Contains(input[i], arg)
+		if present {
+			fmt.Println(input[i])
+		}
+	}
+	return nil
+}
+
+//function to search string from a file/folder
 func search(filename, args string) bool {
 	data, err := os.ReadFile(filename)
-
 	if err != nil {
 		fmt.Println(err)
 	}
 	return strings.Contains(string(data), args)
 }
 
+//function to invoke -o option to write in a file specified
 func oflag(filename string, data string) error {
 	s := flag.String("o", filename, "asdadas")
 	flag.Parse()
