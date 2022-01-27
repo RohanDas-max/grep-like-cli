@@ -22,6 +22,7 @@ func TestSearchstdin(t *testing.T) {
 func TestSearch(t *testing.T) {
 	os.Create("test.txt")
 	os.WriteFile("test.txt", []byte("Hello World"), 0400)
+
 	filename := "test.txt"
 	args := "Hello"
 	defer os.Remove(filename)
