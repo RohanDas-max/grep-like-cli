@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 	"strings"
 	"time"
@@ -33,7 +35,6 @@ func main() {
 			if OutputFilename != "" {
 				go oflag(OutputFilename, output)
 				time.Sleep(10 * time.Millisecond)
-
 			}
 		}
 	}
@@ -62,11 +63,21 @@ func Searchstdin(input []string, arg string) error {
 
 //function to search string from a file/folder
 func search(filename, args string) bool {
-	data, err := os.ReadFile(filename)
-	if err != nil {
-		fmt.Println(err)
+	fs, error := ioutil.ReadDir(filename)
+	if error != nil {
+		data, err := os.ReadFile(filename)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return strings.Contains(string(data), args)
+	} else {
+		for _, fn := range fs {
+			fn := fn.Name()
+			fmt.Println(fn)
+			// search(fn.Name(), args)
+		}
 	}
-	return strings.Contains(string(data), args)
+	return false
 }
 
 //function to invoke -o option to write in a file specified

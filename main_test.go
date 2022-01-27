@@ -21,6 +21,7 @@ func TestSearchstdin(t *testing.T) {
 func TestSearch(t *testing.T) {
 	filename := "test.txt"
 	args := "kya"
+
 	got := search(filename, args)
 	want := true
 	if got != want {
