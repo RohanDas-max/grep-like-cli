@@ -10,6 +10,7 @@ func TestSearchstdin(t *testing.T) {
 	input := []string{
 		"foo", "bar", "foobaz", "barbazfoo", "food",
 	}
+
 	got := Searchstdin(input, arg)
 	var want error = nil
 
@@ -19,14 +20,18 @@ func TestSearchstdin(t *testing.T) {
 }
 
 func TestSearch(t *testing.T) {
+	os.Create("test.txt")
+	os.WriteFile("test.txt", []byte("Hello World"), 0400)
 	filename := "test.txt"
-	args := "kya"
+	args := "Hello"
+	defer os.Remove(filename)
 
 	got := search(filename, args)
 	want := true
 	if got != want {
 		t.Error("got is not want", got, want)
 	}
+
 }
 
 func TestOflag(t *testing.T) {
