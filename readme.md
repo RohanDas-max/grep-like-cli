@@ -4,4 +4,4 @@
 `go install `
 
 ## ` recursive file search doesn't work but the program do shows the available files present in a folder ` 
- * reason:  `no such file or directory` 
+ * error:  `no such file or directory` 
